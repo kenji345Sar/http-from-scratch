@@ -91,6 +91,97 @@ python3 -c "import builtins; print(builtins.dict is dict)"
 
 ---
 
+## 「import なしで使えるもの」は言語によって全然違う
+
+前項で「`dict` は import なしで使える、builtins から自動で見えているから」と書いた。
+これに関連して、**「何が import なしで使えるか」** は言語ごとに大きく違う。
+他言語と並べると、Python がどのへんに居るかが見える。
+
+### 結論
+
+「自動でグローバルに見えるか」のゆるさで、Web 系言語は 3 段階に分かれる。
+
+| 段階 | 例 | 何が import なしで使えるか |
+|---|---|---|
+| ① ゆるい（ほぼ全部見える） | **PHP** | 組み込み関数（`strlen` / `array_map` / `count` / `date`）全部、組み込みクラス（`DateTime` / `PDO`）全部 |
+| ② 中間（基本型だけ自動） | **Python** / **Java** | 言語標準の基本型／関数だけ。それ以外は明示 import |
+| ③ きつい（ほぼ何も自動でない） | **React / モダン JS（ES Modules）** | ブラウザ固有のグローバル (`window`, `document`, `Math`, `console`, `Array`) のみ。`useState` も `React` 自体も import |
+
+### 各言語ごとの様子
+
+**PHP — 組み込みは丸ごとグローバル**
+
+```php
+<?php
+echo strlen("hello");        // import 不要
+$d = new DateTime();         // import 不要
+$arr = array_map(...);       // import 不要
+```
+
+PHP はデフォルトでグローバル名前空間に居て、組み込み関数・組み込みクラスが全部最初から見えている。Laravel でも `use Illuminate\Http\Request;` のような import はたまに出るが、`strlen` や `array_map` には永遠に import がない。
+
+**Python — `builtins` だけ自動、それ以外は明示**
+
+```python
+print(len([1, 2]))           # print も len も builtins から自動
+
+import json                  # 標準ライブラリでも明示
+import socket
+from urllib.parse import unquote_plus
+```
+
+自動で見えるのは [`builtins`](https://docs.python.org/ja/3/library/builtins.html) モジュールの中身だけ（`dict` / `list` / `print` / `len` / `range` 等）。`json` や `socket` のような標準ライブラリは明示 import。
+
+**Java — `java.lang.*` だけ自動**
+
+```java
+String s = "hello";          // java.lang.String, 自動
+System.out.println(s);       // java.lang.System, 自動
+
+import java.util.HashMap;    // それ以外は明示
+import java.io.File;
+```
+
+`java.lang` パッケージだけ自動。それ以外は全部 `import`。設計思想は Python に近い。
+
+**React / モダン JS — ほぼ何も自動でない**
+
+```javascript
+import React, { useState } from 'react';
+import { Button } from '@mui/material';
+import axios from 'axios';
+
+function App() {
+  const [n, setN] = useState(0);
+  return <Button onClick={() => setN(n + 1)}>{n}</Button>;
+}
+```
+
+自動で見えるのはブラウザの組み込みグローバル（`window`, `document`, `console`, `Math`, `Array`, `JSON`, `fetch`）だけ。React 自身も、`useState` のような Hook も import が必要。**ES Modules は「1 ファイル 1 スコープ、明示的に出し入れする」設計**。
+
+### なぜここまで違うのか
+
+| 言語 | 当初の発想 | 結果 |
+|---|---|---|
+| PHP | HTML に埋め込むテンプレート言語として始まった。「とにかく手軽に書ける」優先 | 組み込みを全部グローバルに置いた |
+| Python / Java | 構造化プログラミング志向。「explicit is better than implicit」 | 基本型だけ自動、ほかは明示 |
+| モダン JS / TS | 昔の JS は「全部 window にぶら下げる」で名前衝突に死ぬほど苦しんだ。**その反動で**今は逆方向に振り切った | 何も自動にしない |
+
+JS の「import 地獄」と呼ばれることもあるくらいの厳しさは、過去の「全部グローバル」時代の反省の上に立っている。
+
+### 早見表
+
+| 観点 | PHP | Python | Java | React (ES Modules) |
+|---|---|---|---|---|
+| 組み込み関数を import なしで使える | ✅ | ✅（builtins） | ✅（java.lang） | ✅（ブラウザ global） |
+| 標準ライブラリを import なしで使える | ✅（だいたい） | ❌ | ❌ | ❌ |
+| ユーザ定義クラスを import なしで使える | ❌（namespace 切れば） | ❌ | ❌ | ❌ |
+| import の頻度 | 少ない | 中 | 多い | **超多い** |
+
+「PHP は import がほぼ要らない、React はやたら import が多い」という肌感覚は両方とも正しくて、Python はその真ん中に居る、というのが今の Web 系言語の見取り図。
+
+---
+
 ## （今後追加していく場所）
 
 Python を読み書きしていて「これ独特だな」と感じたものをここに書き足していく。
