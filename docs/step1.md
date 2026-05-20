@@ -1,6 +1,8 @@
 # step1: 生 TCP で HTTP リクエストを受け取る
 
 > 前提知識（HTTP / curl / socket の役割分担）は `docs/概念.md` を参照。
+> 「そもそも `python3 server.py` で何を始めているのか」が気になる場合は
+> `docs/サーバ起動.md` を参照。
 
 ## ゴール
 
