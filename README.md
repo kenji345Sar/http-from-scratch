@@ -61,6 +61,7 @@ http-from-scratch/
 │   ├── 概念.md             # HTTP / curl / socket の役割分担（全 step の前提）
 │   ├── サーバ起動.md       # php artisan serve / dotnet run などの裏で起きていること
 │   ├── 用語集.md           # WSGI / Werkzeug / gunicorn など Python Web の用語
+│   ├── python-メモ.md      # 他言語から来て「Python ここ独特」と感じる箇所
 │   ├── flask-equivalent.md # Flask 版との対応表・実行手順
 │   ├── step1.md           # step1 の手順
 │   └── ...                # step2.md 〜 step6.md
