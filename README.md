@@ -51,15 +51,18 @@ curl -v http://127.0.0.1:8080/
 
 ```
 http-from-scratch/
-├── README.md          # このファイル
-├── server.py          # 現時点（最新 step）のサーバ
-├── app.py             # step6 で分離した WSGI アプリ
-├── static/            # step5 で追加した静的ファイル配信用
+├── README.md              # このファイル
+├── server.py              # 現時点（最新 step）のサーバ
+├── app.py                 # step6 で分離した WSGI アプリ
+├── flask_equivalent.py    # 同じ機能を Flask で書いた比較用（要 pip install -r requirements.txt）
+├── requirements.txt       # flask 依存
+├── static/                # step5 で追加した静的ファイル配信用
 ├── docs/
-│   ├── 概念.md         # HTTP / curl / socket の役割分担（全 step の前提）
-│   ├── step1.md       # step1 の手順
-│   └── ...            # step2.md 〜 step6.md
+│   ├── 概念.md             # HTTP / curl / socket の役割分担（全 step の前提）
+│   ├── flask-equivalent.md # Flask 版との対応表・実行手順
+│   ├── step1.md           # step1 の手順
+│   └── ...                # step2.md 〜 step6.md
 └── snapshots/
-    ├── step1/         # step1 完了時点のコードを凍結
-    └── ...            # step2/ 〜 step6/
+    ├── step1/             # step1 完了時点のコードを凍結
+    └── ...                # step2/ 〜 step6/
 ```

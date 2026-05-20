@@ -6,23 +6,27 @@ step1〜6 で自分の手で組み上げたものと、同じ振る舞いを Fla
 
 ## 同じアプリを Flask で書くと
 
+リポジトリ直下に [`flask_equivalent.py`](../flask_equivalent.py) として
+実行できるコードを置いてある。中身はこれだけ:
+
 ```python
-from flask import Flask, request, redirect
+from flask import Flask, redirect, request
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
 @app.route("/")
 def root():
-    return "hello from http-from-scratch\n"
+    return "hello from Flask\n"
 
 @app.route("/hello")
 def hello():
     name = request.args.get("name", "stranger")
-    return f"hi, {name}!\n"
+    return f"hi, {name}! (via Flask)\n"
 
 @app.route("/html")
 def html():
-    return "<h1>HTML response</h1>\n", 200, {"Content-Type": "text/html; charset=utf-8"}
+    return ("<h1>HTML response</h1>\n", 200,
+            {"Content-Type": "text/html; charset=utf-8"})
 
 @app.route("/old")
 def old():
@@ -37,8 +41,52 @@ if __name__ == "__main__":
 ```
 
 これだけで step1〜6 と同じ機能が揃う。
-静的ファイル配信 (`/static/...`) も書いていないが、Flask 側が自動で
+静的ファイル配信 (`/static/...`) は書いていないが、Flask 側が自動で
 `static_folder` から配信する。
+
+## 実行手順
+
+自前 `server.py` と同じポート 8080 を使うので、片方を起動するときは
+もう片方を止めること。
+
+```
+cd /Users/apple/Desktop/Site/http-from-scratch
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python flask_equivalent.py
+```
+
+別ターミナルから curl で叩く（URL はシングルクォート必須）:
+
+```
+curl 'http://127.0.0.1:8080/'                       # hello from Flask
+curl 'http://127.0.0.1:8080/hello?name=tsk'         # hi, tsk! (via Flask)
+curl -i 'http://127.0.0.1:8080/html'                # 200 text/html
+curl -i 'http://127.0.0.1:8080/old'                 # 302 → /hello
+curl -X POST -d 'a=1&b=2' 'http://127.0.0.1:8080/submit'
+curl -i 'http://127.0.0.1:8080/static/style.css'    # 200 text/css
+curl -i 'http://127.0.0.1:8080/unknown'             # 404
+```
+
+止めるときは `Ctrl+C`。
+
+## 自前 server.py と比べた振る舞いの違い（細部）
+
+機能は同じだが、Flask は自前よりリッチなレスポンスを返す。
+これも「Flask が裏で勝手にやってくれていること」の一部:
+
+| 違い | 自前 server.py | Flask |
+|---|---|---|
+| `Server` ヘッダ | 付けていない | `Server: Werkzeug/x.x Python/x.x` を自動付与 |
+| `Date` ヘッダ | 付けていない | 現在時刻を RFC 1123 形式で自動付与 |
+| 404 のボディ | プレーンテキスト | `<!doctype html><html>...</html>` の HTML エラーページ |
+| 302 のボディ | 空 | 「ここを開いてください」リンク入り HTML |
+| `Content-Disposition`（静的ファイル） | 付けていない | `inline; filename=style.css` を自動付与 |
+| reason 文字列 | `302 Found` | `302 FOUND`（大文字）— 振る舞いとして等価 |
+
+つまり Flask は同じ機能を「より丁寧に」返している。
+このプロジェクトの目的は機能の最小集合を理解することなので、自前側は素朴な
+レスポンスのままにしてある。
 
 ## 何が「内包されている」か
 
@@ -91,11 +139,10 @@ step6 で `server.py` を WSGI 互換にしたので、Flask アプリは自前 
 実運用では、下の枠が **gunicorn**、上の枠が **Flask**、というのが定番構成。
 このプロジェクトでは両方の枠を自分の手で書いた。
 
-## 実際に Flask を乗せてみる
+## おまけ: 自前 server.py の上に Flask アプリを乗せる
 
-```
-pip install flask
-```
+`flask_equivalent.py` は Flask の dev サーバ（Werkzeug）で動かしているが、
+**自前の `server.py` の上でも同じ Flask アプリは動く**（step6 で WSGI 互換にしたから）。
 
 `server.py` のインポート行と最後だけ書き換える:
 
