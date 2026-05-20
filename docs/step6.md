@@ -1,6 +1,8 @@
 # step6: WSGI 互換にして、サーバとアプリを分離する
 
 > 前提知識（HTTP / curl / socket の役割分担）は `docs/概念.md` を参照。
+> WSGI / PEP 3333 / Werkzeug / environ / gunicorn / waitress などの用語が
+> 分からなくなったら `docs/用語集.md` を参照。
 
 ## ゴール
 

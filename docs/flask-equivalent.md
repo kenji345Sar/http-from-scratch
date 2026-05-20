@@ -4,6 +4,9 @@ step1〜6 で自分の手で組み上げたものと、同じ振る舞いを Fla
 どれだけ短くなるか、そして「短く書ける」とは Flask が裏で何をやってくれて
 いるかを並べて見るためのドキュメント。
 
+> WSGI / Werkzeug / gunicorn / waitress などの用語が分からなくなったら
+> `docs/用語集.md` を参照。
+
 ## 同じアプリを Flask で書くと
 
 リポジトリ直下に [`flask_equivalent.py`](../flask_equivalent.py) として

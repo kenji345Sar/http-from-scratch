@@ -59,6 +59,7 @@ http-from-scratch/
 ├── static/                # step5 で追加した静的ファイル配信用
 ├── docs/
 │   ├── 概念.md             # HTTP / curl / socket の役割分担（全 step の前提）
+│   ├── 用語集.md           # WSGI / Werkzeug / gunicorn など Python Web の用語
 │   ├── flask-equivalent.md # Flask 版との対応表・実行手順
 │   ├── step1.md           # step1 の手順
 │   └── ...                # step2.md 〜 step6.md
