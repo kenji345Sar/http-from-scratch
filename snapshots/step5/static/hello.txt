@@ -1,0 +1,2 @@
+hello from static/hello.txt
+これはディスク上の実ファイル。
