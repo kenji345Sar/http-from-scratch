@@ -58,13 +58,14 @@ http-from-scratch/
 ├── requirements.txt       # flask 依存
 ├── static/                # step5 で追加した静的ファイル配信用
 ├── docs/
-│   ├── 概念.md             # HTTP / curl / socket の役割分担（全 step の前提）
-│   ├── サーバ起動.md       # php artisan serve / dotnet run などの裏で起きていること
-│   ├── 用語集.md           # WSGI / Werkzeug / gunicorn など Python Web の用語
-│   ├── python-メモ.md      # 他言語から来て「Python ここ独特」と感じる箇所
-│   ├── flask-equivalent.md # Flask 版との対応表・実行手順
-│   ├── step1.md           # step1 の手順
-│   └── ...                # step2.md 〜 step6.md
+│   ├── 概念.md              # HTTP / curl / socket の役割分担（全 step の前提）
+│   ├── サーバ起動.md        # php artisan serve / dotnet run などの裏で起きていること
+│   ├── 用語集.md            # WSGI / Werkzeug / gunicorn など Python Web の用語
+│   ├── 言語別役割対応.md     # gunicorn ≒ Tomcat ≒ Kestrel など PHP/Java/C# との対応表
+│   ├── python-メモ.md       # 他言語から来て「Python ここ独特」と感じる箇所
+│   ├── flask-equivalent.md  # Flask 版との対応表・実行手順
+│   ├── step1.md            # step1 の手順
+│   └── ...                 # step2.md 〜 step6.md
 └── snapshots/
     ├── step1/             # step1 完了時点のコードを凍結
     └── ...                # step2/ 〜 step6/
