@@ -53,6 +53,15 @@ step6 まで終わった `server.py` の上に、認証 (authentication) と
 ドキュメントは `docs/auth/` 配下に置く。
 最初に読むのは [`docs/auth/概念.md`](docs/auth/概念.md)。
 
+## 関連プロジェクト: TLS / 証明書 (隣の層)
+
+本プロジェクトは **HTTP（と TCP）** を自分の手で組む。一方、その下の **TLS / 証明書 / mTLS** は扱わない。同じ curl で観察できる隣接層を触りたい場合は、`../infra-lessons/01-package-delivery/` を参照。
+
+- http-from-scratch: HTTP を **中から** 見る（socket からテキストを読む）
+- infra-lessons step-04〜06: TLS を **外から** 組み立てる（nginx を設定し、`ca.crt` / クライアント証明書を配る）
+
+両者は curl の `-v` 出力で同時に見える「同じスタックの隣り合った層」。詳細な対応関係は [`../infra-lessons/01-package-delivery/README.md`](../infra-lessons/01-package-delivery/README.md) の「http-from-scratch との関係」節を参照。
+
 ## 実行方法（step6 時点）
 
 ```
